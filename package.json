@@ -1,0 +1,26 @@
+{
+  "name": "url-shortner",
+  "version": "1.0.0",
+  "description": "Demonstrating http redirct as a class lab exersize",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/heriagape/url-shortner.git"
+  },
+  "keywords": [
+    "http",
+    "redirect",
+    "nodejs",
+    "JavaScript",
+    "express"
+  ],
+  "author": "Heri Agape",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heriagape/url-shortner/issues"
+  },
+  "homepage": "https://github.com/heriagape/url-shortner#readme"
+}
