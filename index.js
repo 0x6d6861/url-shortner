@@ -1,13 +1,19 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+//const path    = require("path");
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('data/data.db');
 
-app.use(express.static(__dirname + '/views'));
-app.use(express.static(__dirname + '/Script'));
+const { URL } = require('url');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); 
 
-var path    = require("path");
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('data/data.db');
+
+
+
 
 var randomCode = function(length) {
 	if (length === undefined){
@@ -34,28 +40,49 @@ app.listen(3000, function () {
 });
 
 
+
+
 app.get('/', function (req, res) { 	
-	var data = db.all('SELECT * FROM links');
-	console.log(data);
-	res.render('index', data);
+	db.all('SELECT * FROM links', function(err,rows){
+		console.log(rows);
+		res.render('index', {'links': rows});
+	});
+	return true;
 });
 
-app.get('/add', function (req, res) { 	
-	//console.log(randomCode());
-	res.sendFile(path.join(__dirname+'/views/add.html'));
-});
-
-app.post('link', function(res, req){
-	var code = randomCode();
-	var link = req.body.link;
+app.post('/add', function(res, req){
 	
-	var stmt = db.prepare('INSERT INTO links (code, link) VALUES (?, ?)');
-	stmt.run(code, link);
-	stmt.finalize(function(err){
-		console.log("The link has been saved in the database!");
-		return true;
+	var code = randomCode();
+	var link = req.req.body.link;
+	
+	db.get('SELECT * FROM links WHERE link=' + link, function(err,row){
+		if(row == null){
+			var stmt = db.prepare('INSERT INTO links (code, link) VALUES (?, ?)');
+			stmt.run(code, link);
+			stmt.finalize(function(err){
+				console.log("The link has been saved in the database!");
+			});
+			res.redirect(200, '/');
+		}
 	});
 	
+	console.log("OOPS! Something happened!");
+	db.close();
 	return false;
+});
+
+app.get('/:code', function(req, res) {
+	var code = req.params.code;
+	db.get('SELECT * FROM links WHERE code=' + code, function(err,row){
+		if(row != null){
+			// redirect with a header
+			var myLink = new URL(row[link]);
+			res.redirect(301, myLink.href);
+		}
+		// reder a 404 page
+	});
+	db.close();
+	res.status(404).send('Sorry, we cannot find that link');
+	
 });
 

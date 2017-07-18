@@ -1,3 +1,47 @@
-<div class="title">  
-    Hello data
-</div>  
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add link</title>
+    
+    <style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+</style>
+</head>
+<body>
+    <h3>Add Link</h3>
+    
+    <form name="form" action="/add" method="POST">
+      <fieldset>
+        <legend>Add link to daabase:</legend>
+        Add Link: <input placeholder="http://example.com" type="url" id="link" name="link">
+        <input type="submit" value="Save">
+      </fieldset>
+    </form>
+    
+    <hr>
+    <table>
+  <tr>
+    <th>Code</th>
+    <th>Link</th>
+    <th>Short URL</th>
+  </tr>
+  
+
+    <% links.forEach(function(link) { %>
+      <tr>
+        <td><%- link.code -%></td>
+        <td><%- link.link -%></td>
+        <td><a  target="_blank" href="http://bit.ly/<%- link.code -%>">
+          http://bit.ly/<%- link.code -%>
+        </a></td>
+      </tr>
+    <% }); %>
+  
+</table>
+    
+</body>
+</html>
