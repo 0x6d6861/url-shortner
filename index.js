@@ -55,8 +55,8 @@ app.post('/add', function(res, req){
 	var code = randomCode();
 	var link = req.req.body.link;
 	
-	db.get('SELECT * FROM links WHERE link=' + link, function(err,row){
-		if(row == null){
+	db.get(encodeURIComponent('SELECT * FROM links WHERE link=' + link), function(err,row){
+		if(!row){
 			var stmt = db.prepare('INSERT INTO links (code, link) VALUES (?, ?)');
 			stmt.run(code, link);
 			stmt.finalize(function(err){
