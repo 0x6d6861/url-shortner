@@ -67,21 +67,23 @@ app.post('/add', function(res, req){
 	});
 	
 	console.log("OOPS! Something happened!");
-	db.close();
+	//db.close();
 	return false;
 });
 
 app.get('/:code', function(req, res) {
 	var code = req.params.code;
-	db.get('SELECT * FROM links WHERE code=' + code, function(err,row){
-		if(row != null){
+	db.get("SELECT * FROM links WHERE code=" + code, function(err,row){
+		if(row){
 			// redirect with a header
 			var myLink = new URL(row[link]);
+			console.log(myLink);
 			res.redirect(301, myLink.href);
 		}
 		// reder a 404 page
 	});
-	db.close();
+	//db.close();
+	console.log(code);
 	res.status(404).send('Sorry, we cannot find that link');
 	
 });
