@@ -1,14 +1,16 @@
 const express 			= 	require('express');
 const bodyParser 		= 	require('body-parser');
+const expressSanitized 	= 	require('express-sanitize-escape');
 const sqlite3 			= 	require('sqlite3').verbose();
 
 const db 				= 	new sqlite3.Database('data/data.db');
 const app 				= 	express();
 
-const { URL } 			= 	require('url');
+const URL 				= 	require('url');
 
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(expressSanitized());
 	app.set('view engine', 'ejs'); 
 
 
@@ -70,20 +72,20 @@ app.post('/add', function(req, res){
 	res.redirect('/');
 });
 
-app.get('/:link_code', function(req, res) {
-	var link_code = req.params.link_code;
-	db.get("SELECT * FROM links WHERE code=" + link_code, function(err,row){
-		console.log(err);
+app.get('/:link_code', function(req, res, next) {
+	var linkcode = String(req.params.link_code);
+	db.get('SELECT * FROM links WHERE code="' + linkcode + '"', function(err,row){
+		console.log(linkcode);
 		if(row){
 			// redirect with a header
-			var myLink = new URL(row[link]);
+			var myLink = URL.parse(String(row.link), true);
 			console.log(myLink);
-			//res.redirect(301, myLink.href);
+			res.redirect(myLink.href);
+		}else {
+			// reder a 404 page
+			res.status(404).send('Sorry, we cannot find that link');
 		}
-		// reder a 404 page
 	});
-	//db.close();
-	res.status(404).send('Sorry, we cannot find that link');
 	
 });
 
