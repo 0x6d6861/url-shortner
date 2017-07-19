@@ -1,15 +1,16 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-//const path    = require("path");
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('data/data.db');
+const express 			= 	require('express');
+const bodyParser 		= 	require('body-parser');
+const sqlite3 			= 	require('sqlite3').verbose();
 
-const { URL } = require('url');
+const db 				= 	new sqlite3.Database('data/data.db');
+const app 				= 	express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs'); 
+const { URL } 			= 	require('url');
+
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({ extended: true }));
+	app.set('view engine', 'ejs'); 
+
 
 
 
@@ -50,40 +51,38 @@ app.get('/', function (req, res) {
 	return true;
 });
 
-app.post('/add', function(res, req){
+app.post('/add', function(req, res){
 	
 	var code = randomCode();
-	var link = req.req.body.link;
+	var link = req.body.link;
 	
-	db.get(encodeURIComponent('SELECT * FROM links WHERE link=' + link), function(err,row){
-		if(!row){
+	db.get("SELECT * FROM links WHERE link='" + link + "'", function(err,row){
+		console.log(row);
+		if(row == null){
 			var stmt = db.prepare('INSERT INTO links (code, link) VALUES (?, ?)');
 			stmt.run(code, link);
-			stmt.finalize(function(err){
-				console.log("The link has been saved in the database!");
-			});
-			res.redirect(200, '/');
+			stmt.finalize();
+			console.log("The link has been saved in the database!");
+		}else {
+			console.log("The link exists in the database!");
 		}
 	});
-	
-	console.log("OOPS! Something happened!");
-	//db.close();
-	return false;
+	res.redirect('/');
 });
 
-app.get('/:code', function(req, res) {
-	var code = req.params.code;
-	db.get("SELECT * FROM links WHERE code=" + code, function(err,row){
+app.get('/:link_code', function(req, res) {
+	var link_code = req.params.link_code;
+	db.get("SELECT * FROM links WHERE code=" + link_code, function(err,row){
+		console.log(err);
 		if(row){
 			// redirect with a header
 			var myLink = new URL(row[link]);
 			console.log(myLink);
-			res.redirect(301, myLink.href);
+			//res.redirect(301, myLink.href);
 		}
 		// reder a 404 page
 	});
 	//db.close();
-	console.log(code);
 	res.status(404).send('Sorry, we cannot find that link');
 	
 });
