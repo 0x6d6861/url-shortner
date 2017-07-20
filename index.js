@@ -1,6 +1,5 @@
 const express 			= 	require('express');
 const bodyParser 		= 	require('body-parser');
-const expressSanitized 	= 	require('express-sanitize-escape');
 const sqlite3 			= 	require('sqlite3').verbose();
 
 const db 				= 	new sqlite3.Database('data/data.db');
@@ -10,7 +9,6 @@ const URL 				= 	require('url');
 
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
-	app.use(expressSanitized());
 	app.set('view engine', 'ejs'); 
 
 
@@ -38,7 +36,7 @@ db.serialize(function () {
 
 //db.close();
 
-app.listen(3000, function () { 
+app.listen(80, function () { 
 	console.log('Example app listening on port 3000!');
 });
 
