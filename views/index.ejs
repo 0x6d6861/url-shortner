@@ -2,55 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add link</title>
-    
+    <title>Cool Bit.Ly</title>
+
     <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    
+<link rel="stylesheet" href="https://bootswatch.com/lumen/bootstrap.min.css">
+
     <style>
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
+        .container{
+            max-width: 960px;
+        }
 </style>
 </head>
-<body>
-    <h3>Add Link</h3>
-    
-    <form name="form" action="/add" method="POST">
-      <fieldset>
-        <legend>Add link to daabase:</legend>
-        Add Link: <input placeholder="http://example.com" type="url" id="link" name="link">
-        <input type="submit" value="Save">
-      </fieldset>
-    </form>
-    
-    <hr>
-    <table>
-  <tr>
-    <th>Code</th>
-    <th>Link</th>
-    <th>Short URL</th>
-  </tr>
-  
+<body class="">
 
-    <% links.forEach(function(link) { %>
-      <tr>
-        <td><%- link.code -%></td>
-        <td><%- link.link -%></td>
-        <td><a  target="_blank" href="http://bit.ly/<%- link.code -%>">
-          http://bit.ly/<%- link.code -%>
-        </a></td>
-      </tr>
-    <% }); %>
-  
-</table>
-    
+<nav class="navbar navbar-default ">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Cool Bit.Ly</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class=" navbar-right">
+                <p class="navbar-text">Signed in as Mark Otto</p>
+
+            </div>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div class="container">
+<div class="jumbotron">
+    <div class="container">
+
+        <div class="col-sm-8">
+            <h3>Generate a short link</h3>
+            <br>
+            <form class="form-inline" id="add_form" action="/add" method="POST">
+                <div class="form-group form-group-lg">
+                    <label for="exampleInputName2">Add Link:</label>
+                    <input class="form-control" placeholder="http://example.com" type="url" id="link" name="link" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">Generate Link</button>
+            </form>
+        </div>
+        <div class="col-sm-4">
+            <div id="message" class="text-center">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+    <div class="panel panel-info">
+        <div class="panel-heading clearfix">
+            <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Links</h4>
+            <div class="btn-group pull-right">
+                <a href="#" id="refesh_btn" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body" id="links-section">
+            <table class = "table table-hover" id="table_link">
+                <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Link</th>
+                    <th>Short URL</th>
+                    <th>views</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% links.forEach(function(link) { %>
+                <tr>
+                    <td style="font-weight: 700;"><%- link.code %></td>
+                    <td><%- link.link %></td>
+                    <td><a  target="_blank" href="http://bit.ly/<%- link.code %>">
+                            bit.ly/<%- link.code %>
+                        </a></td>
+                    <td>views</td>
+                </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</div>
 </body>
 
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/jquery.tabledit.min.js"></script>
+<script src="/js/script.js"></script>
 </html>

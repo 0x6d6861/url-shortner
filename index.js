@@ -9,7 +9,9 @@ const URL 				= 	require('url');
 
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
-	app.set('view engine', 'ejs'); 
+	app.set('view engine', 'ejs');
+app.use('/js', express.static('js'))
+app.use('/css', express.static('css'))
 
 
 
@@ -29,22 +31,28 @@ var randomCode = function(length) {
 }
 
 db.serialize(function () {
-  db.run('CREATE TABLE IF NOT EXISTS links ( id integer PRIMARY KEY, link text NOT NULL UNIQUE, code text NOT NULL UNIQUE, time DATETIME DEFAULT CURRENT_TIMESTAMP)', function(err){
+  db.run('CREATE TABLE IF NOT EXISTS links ( id integer PRIMARY KEY, link text NOT NULL UNIQUE, code text NOT NULL UNIQUE, deleted boolean NOT NULL default 0, time DATETIME DEFAULT CURRENT_TIMESTAMP)', function(err){
 		console.log("Database initialiazed!");
 	  });
 })
 
 //db.close();
 
-app.listen(80, function () { 
+app.listen(3000, function () {
 	console.log('Example app listening on port 3000!');
 });
 
-
+app.get('/links', function (req, res) {
+    db.all('SELECT * FROM links WHERE deleted = 0', function(err,rows){
+        console.log(rows);
+        res.render('partials/links', {'links': rows});
+    });
+    return true;
+});
 
 
 app.get('/', function (req, res) { 	
-	db.all('SELECT * FROM links', function(err,rows){
+	db.all('SELECT * FROM links WHERE deleted = 0', function(err,rows){
 		console.log(rows);
 		res.render('index', {'links': rows});
 	});
@@ -69,6 +77,73 @@ app.post('/add', function(req, res){
 	});
 	res.redirect('/');
 });
+
+
+app.post('/ajax', function(req, res){
+
+    var link = req.body.link;
+    var code = req.body.code;
+    var action = req.body.action;
+
+    var res_data = req.body;
+
+    if (action == "add"){
+
+        db.get("SELECT * FROM links WHERE link='" + link + "'", function(err, row){
+
+            if((row == null) && (link != null)){
+                var stmt = db.prepare('INSERT INTO links (code, link) VALUES (?, ?)');
+                code = randomCode();
+                stmt.run(code, link);
+                stmt.finalize();
+                res_data['code'] = code;
+                console.log("Link has been ADDED to the database");
+            }else {
+
+				if(row.deleted == 1){
+                    var stmt = db.prepare('UPDATE links SET deleted=0 WHERE code =(?)');
+                    stmt.run(row.code);
+                    res_data['code'] = row.code;
+                    console.log("Link has been RESTORED to the database");
+				}else{
+                    res_data['message'] = "The link already exists in the database";
+                    console.log("The link exists in the database!");
+				}
+
+            }
+            res.json(res_data);
+
+        });
+
+
+
+    }
+
+    if (action == "edit"){
+        var stmt = db.prepare('UPDATE links SET link=(?) WHERE code =(?)');
+        stmt.run(link, code);
+        console.log("Link has been UPDATED to the database");
+        res.json(res_data);
+	}
+
+    if (action == "restore"){
+        var stmt = db.prepare('UPDATE links SET deleted=0 WHERE code =(?)');
+        stmt.run(code);
+        console.log("Link has been RESTORED to the database");
+        res.json(res_data);
+    }
+
+    if (action == "delete"){
+        var stmt = db.prepare('UPDATE links SET deleted=1 WHERE code =(?)');
+        stmt.run(code);
+        console.log("Link has been DELETED to the database");
+        res.json(res_data);
+    }
+
+	return true;
+});
+
+
 
 app.get('/:link_code', function(req, res, next) {
 	var linkcode = String(req.params.link_code);

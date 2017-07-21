@@ -1,0 +1,31 @@
+<table class = "table table-hover  table-bordered" id="table_link">
+    <thead>
+    <tr>
+        <th>Code</th>
+        <th>Link</th>
+        <th>Short URL</th>
+        <th>views</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% links.forEach(function(link) { %>
+    <tr>
+        <td style="font-weight: 700;"><%- link.code %></td>
+        <td><%- link.link %></td>
+        <td><a  target="_blank" href="http://bit.ly/<%- link.code %>">
+            bit.ly/<%- link.code %>
+        </a></td>
+        <td>views</td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table>
+<script>
+    $('#table_link').Tabledit({
+        url: "/ajax",
+        columns: {
+            identifier: [0, 'code'],
+            editable: [[1, 'link']]
+        }
+    });
+</script>
