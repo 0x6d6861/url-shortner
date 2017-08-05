@@ -10,12 +10,12 @@
     <tbody>
     <% links.forEach(function(link) { %>
     <tr>
-        <td style="font-weight: 700;"><%- link.code %></td>
+        <td style="font-weight: 700;font-size: 20px;"><%- link.code %></td>
         <td><%- link.link %></td>
         <td><a  target="_blank" href="http://bit.ly/<%- link.code %>">
             bit.ly/<%- link.code %>
         </a></td>
-        <td>views</td>
+        <td><span id="view_<%- link.id %>" class="badge"><%- link.views %></span></td>
     </tr>
     <% }); %>
     </tbody>

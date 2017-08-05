@@ -14,6 +14,9 @@
         .container{
             max-width: 960px;
         }
+        .badge{
+            font-size: 20px;
+        }
 </style>
 </head>
 <body class="">
@@ -34,7 +37,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <div class=" navbar-right">
-                <p class="navbar-text">Signed in as Mark Otto</p>
+                <p class="navbar-text">Signed in as Person Name</p>
 
             </div>
 
@@ -78,28 +81,7 @@
             </div>
         </div>
         <div class="panel-body" id="links-section">
-            <table class = "table table-hover" id="table_link">
-                <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Link</th>
-                    <th>Short URL</th>
-                    <th>views</th>
-                </tr>
-                </thead>
-                <tbody>
-                <% links.forEach(function(link) { %>
-                <tr>
-                    <td style="font-weight: 700;"><%- link.code %></td>
-                    <td><%- link.link %></td>
-                    <td><a  target="_blank" href="http://bit.ly/<%- link.code %>">
-                            bit.ly/<%- link.code %>
-                        </a></td>
-                    <td>views</td>
-                </tr>
-                <% }); %>
-                </tbody>
-            </table>
+            <%- include('partials/links'); %>
         </div>
     </div>
 
@@ -117,5 +99,6 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="/js/jquery.tabledit.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/script.js"></script>
 </html>

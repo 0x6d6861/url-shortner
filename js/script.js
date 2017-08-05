@@ -1,5 +1,16 @@
 $(document).ready(function() {
 
+    var socket = io.connect('http://localhost:3000');
+    socket.on('connect', function(data) {
+        socket.emit('join', 'Hello World from client');
+    });
+
+    socket.on('views', function(msg){
+        // $('#message').append($('<li>').text(msg));
+       $(msg.data.view_id).text(msg.data.views);
+        console.log(msg);
+    });
+
     $('#table_link').Tabledit({
         url: "/ajax",
         columns: {
